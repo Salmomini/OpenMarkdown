@@ -50,9 +50,8 @@ nest blockquotes by adding another `>`.
 Callouts start with a header line that includes a title and a color, and the
 quoted lines that follow become the callout body.
 
-> [Release Notes]{colour:teal}
-> This is a callout block with a custom title and color.
-> It can include **inline formatting** and multiple lines.
+> [My title]{color: red}
+> Content comes here…
 
 # Tables
 Tables use a header row, a separator row, and then body rows. Alignment is set
@@ -96,5 +95,5 @@ $$a^2 + b^2 = c^2$$
 
 ---
 
-That is the full OpenMarkdown v1.0 feature set. If you need more, bump the
-version and add syntax in v1.1.
+That is the full OpenMarkdown v1.1 feature set. If you need more, bump the
+version and add syntax in v1.2.

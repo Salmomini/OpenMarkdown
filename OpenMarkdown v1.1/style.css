@@ -384,64 +384,76 @@ body {
 #write .md-alert-danger,
 #write .md-alert-important,
 #write .md-alert-caution {
-  border-radius: 8px;
-  padding: 0.45em 1.2em;
-  margin: 16px 0;
-  border: 1px solid var(--divider);
-  background: var(--surface);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  transition: all 0.15s ease-in-out;
+  --callout-color: #2563eb;
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin: 18px 0;
+  border: 1.5px solid color-mix(in srgb, var(--callout-color) 35%, #ffffff);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--callout-color) 10%, #ffffff),
+      color-mix(in srgb, var(--callout-color) 6%, #ffffff)
+    );
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.06);
 }
 
 /* INFO / NOTE */
 #write .md-alert-info,
 #write .md-alert-note {
+  --callout-color: #2563eb;
   background: #f2f6ff;
   border-color: #b9ccff;
 }
 
 /* TIP */
 #write .md-alert-tip {
+  --callout-color: #059669;
   background: #f1fff6;
   border-color: #a7f3d0;
 }
 
 /* WARNING */
 #write .md-alert-warning {
+  --callout-color: #b45309;
   background: #fff9e6;
   border-color: #fde68a;
 }
 
 /* DANGER */
 #write .md-alert-danger {
+  --callout-color: #dc2626;
   background: #fff2f2;
   border-color: #fecaca;
 }
 
 /* IMPORTANT */
 #write .md-alert-important {
+  --callout-color: #7c3aed;
   background: #f6f2ff;
   border-color: #d4b8ff;
 }
 
 /* CAUTION */
 #write .md-alert-caution {
+  --callout-color: #ea580c;
   background: #fff8f0;
   border-color: #fbc2a4;
 }
 
 /* Title inside callouts */
+#write .md-alert > p:first-child {
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  color: var(--callout-color);
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
 #write .md-alert > p:first-child strong {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 2px;
+  font-weight: 700;
 }
 
-/* Hover effect */
-#write .md-alert:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-}
+#write .md-alert > :last-child { margin-bottom: 0; }
 
 /*********************************
   Tables
@@ -587,7 +599,8 @@ body {
   tbody,
   tr,
   blockquote,
-  .callout {
+  .callout,
+  .md-alert {
     break-inside: avoid;
     page-break-inside: avoid;
   }

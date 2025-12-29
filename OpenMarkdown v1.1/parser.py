@@ -14,10 +14,9 @@ class OpenMarkdownError(Exception):
 # Inline parsing
 # ---------------------------
 INLINE_PATTERNS = [
-    ("image", re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")),
+    ("image", re.compile(r"!\[([^\]]*)\]\(([^)]+)\)(?:\{([0-9]+(?:\.[0-9]+)?)%\})?")),
     ("math_inline", re.compile(r"\$(.+?)\$")),
     ("link", re.compile(r"\[([^\]]+)\]\(([^)]+)\)")),
-    ("code", re.compile(r"(?<!`)`(.+?)`(?!`)")),
     ("bold", re.compile(r"\*\*(.+?)\*\*")),
     ("italic", re.compile(r"\*(.+?)\*")),
     ("highlight", re.compile(r"==(.+?)==")),
@@ -25,10 +24,52 @@ INLINE_PATTERNS = [
 ]
 
 
+def find_code_span(text: str) -> Optional[Dict[str, Any]]:
+    i = 0
+    n = len(text)
+    while i < n:
+        if text[i] != "`":
+            i += 1
+            continue
+        run_len = 1
+        while i + run_len < n and text[i + run_len] == "`":
+            run_len += 1
+        j = i + run_len
+        while j < n:
+            if text[j] == "`":
+                close_len = 1
+                while j + close_len < n and text[j + close_len] == "`":
+                    close_len += 1
+                if close_len == run_len:
+                    content = text[i + run_len:j]
+                    if "\n" in content:
+                        content = content.replace("\n", " ")
+                    if (
+                        len(content) >= 2
+                        and content.startswith(" ")
+                        and content.endswith(" ")
+                        and content.strip() != ""
+                    ):
+                        content = content[1:-1]
+                    return {
+                        "start": i,
+                        "end": j + close_len,
+                        "content": content,
+                    }
+                j += close_len
+            else:
+                j += 1
+        i += run_len
+    return None
+
+
 def parse_inline(text: str) -> List[Dict[str, Any]]:
     nodes: List[Dict[str, Any]] = []
 
     while text:
+        escape_idx = text.find("\\")
+        code_span = find_code_span(text)
+        code_start = code_span["start"] if code_span else None
         earliest_start = None
         earliest_match = None
         earliest_kind = None
@@ -39,6 +80,28 @@ def parse_inline(text: str) -> List[Dict[str, Any]]:
                 earliest_start = m.start()
                 earliest_match = m
                 earliest_kind = kind
+
+        if (
+            escape_idx != -1
+            and (earliest_start is None or escape_idx < earliest_start)
+            and (code_start is None or escape_idx < code_start)
+        ):
+            if escape_idx > 0:
+                nodes.append({"type": "text", "value": text[:escape_idx]})
+            if escape_idx + 1 < len(text):
+                nodes.append({"type": "text", "value": text[escape_idx + 1]})
+                text = text[escape_idx + 2:]
+            else:
+                nodes.append({"type": "text", "value": "\\"})
+                text = ""
+            continue
+
+        if code_span and (earliest_start is None or code_start < earliest_start):
+            if code_start > 0:
+                nodes.append({"type": "text", "value": text[:code_start]})
+            nodes.append({"type": "code", "value": code_span["content"]})
+            text = text[code_span["end"]:]
+            continue
 
         if not earliest_match:
             nodes.append({"type": "text", "value": text})
@@ -51,7 +114,12 @@ def parse_inline(text: str) -> List[Dict[str, Any]]:
             nodes.append({
                 "type": "image",
                 "alt": earliest_match.group(1),
-                "url": earliest_match.group(2).strip()
+                "url": earliest_match.group(2).strip(),
+                "width_percent": (
+                    float(earliest_match.group(3))
+                    if earliest_match.group(3)
+                    else None
+                ),
             })
         elif earliest_kind == "link":
             nodes.append({

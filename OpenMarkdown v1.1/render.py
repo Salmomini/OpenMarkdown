@@ -38,7 +38,11 @@ def render_inline(nodes: List[Dict[str, Any]]) -> str:
             out.append(f'<a href="{esc(n["url"])}">{esc(n["text"])}</a>')
         elif t == "image":
             alt = esc(n.get("alt", ""))
-            out.append(f'<img src="{esc(n["url"])}" alt="{alt}">')
+            width_percent = n.get("width_percent")
+            style = ""
+            if isinstance(width_percent, (int, float)):
+                style = f' style="width: {width_percent}%; height: auto;"'
+            out.append(f'<img src="{esc(n["url"])}" alt="{alt}"{style}>')
         elif t == "math_inline":
             # Use MathJax default delimiters and keep TeX unescaped.
             out.append(f'<span class="math">\\({n["content"]}\\)</span>')
@@ -75,14 +79,29 @@ def render_blocks(nodes: List[Dict[str, Any]]) -> List[str]:
         elif t == "callout":
             title_html = render_inline(n.get("title", []))
             color = n.get("color", "").strip()
-            style = f' style="--callout-color: {esc(color)};"' if color else ""
+            classes = ["md-alert"]
+            if color:
+                color_key = color.strip().lower()
+                color_map = {
+                    "info": "md-alert-info",
+                    "note": "md-alert-note",
+                    "tip": "md-alert-tip",
+                    "warning": "md-alert-warning",
+                    "danger": "md-alert-danger",
+                    "important": "md-alert-important",
+                    "caution": "md-alert-caution",
+                }
+                if color_key in color_map:
+                    classes.append(color_map[color_key])
+            style = ""
+            if color and len(classes) == 1:
+                style = f' style="--callout-color: {esc(color)};"'
             inner = ""
             if n.get("children"):
                 inner = "\n".join(render_blocks(n["children"]))
-                inner = f"<div class=\"callout-body\">{inner}</div>"
             body.append(
-                f"<div class=\"callout\"{style}>"
-                f"<div class=\"callout-title\">{title_html}</div>"
+                f"<div class=\"{' '.join(classes)}\"{style}>"
+                f"<p><strong>{title_html}</strong></p>"
                 f"{inner}</div>"
             )
 
