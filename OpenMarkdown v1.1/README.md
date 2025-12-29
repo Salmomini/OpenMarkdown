@@ -96,6 +96,12 @@ and blockquotes.
 - Blockquotes and callouts do not support lazy continuation lines.
 
 ## CLI usage
+
+Simple:
+```bash
+python3 main.py
+```
+
 Parse:
 ```bash
 python3 parser.py example.md

@@ -92,6 +92,13 @@ body {
   padding: .08em .32em;
 }
 
+#write img {
+  display: block;
+  margin: 16px auto;
+  max-width: 100%;
+  height: auto;
+}
+
 /* Keyboard keys */
 #write kbd {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;

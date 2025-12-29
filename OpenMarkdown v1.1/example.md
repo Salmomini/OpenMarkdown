@@ -27,10 +27,10 @@ Inline styles include **bold**, *italic*, ==highlight==, ~strikethrough~, and
 Inline math is wrapped in single dollar signs: $a^2 + b^2 = c^2$.
 
 Images use the standard Markdown image syntax:
-![Mountains at dusk](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F1526713%2Fpexels-photo-1526713.jpeg%3Fcs%3Dsrgb%26dl%3Dpexels-francesco-ungaro-1526713.jpg%26fm%3Djpg&f=1&nofb=1&ipt=253124065c11a7c3599b7481c89beec4e62608efd1e574c8b3b70444fc0d63ce)
+![Mountains at dusk](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F1526713%2Fpexels-photo-1526713.jpeg%3Fcs%3Dsrgb%26dl%3Dpexels-francesco-ungaro-1526713.jpg%26fm%3Djpg&f=1&nofb=1&ipt=253124065c11a7c3599b7481c89beec4e62608efd1e574c8b3b70444fc0d63ce){50%}
 
 # Lists and tasks
-Unordered lists use `- ` and task lists use `- [ ]` or `- [x]`.
+Unordered lists use `-` and task lists use `- [ ]` or `- [x]`.
 
 - A basic list item
 - Another item with **emphasis** and a [link](https://openmarkdown.example)

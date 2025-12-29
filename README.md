@@ -34,6 +34,10 @@ explicitly declare the version they target, ensuring that a file written for v1
 is always parsed by a v1-compatible engine and renders the same way on every
 machine, now and in the future.
 
+The goal of OpenMarkdown is to make Markdown more stable and standardized within
+a single, versioned specification and an authoritative reference parser.
+
+
 ---
 
 > **Don’t believe me?**  

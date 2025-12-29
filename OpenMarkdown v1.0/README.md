@@ -81,6 +81,12 @@ and blockquotes.
 - Tables require a header + separator row.
 
 ## CLI usage
+
+Simple:
+```bash
+python3 main.py
+```
+
 Parse:
 ```bash
 python3 parser.py example.md
