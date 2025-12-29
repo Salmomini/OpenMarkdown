@@ -62,7 +62,8 @@ def render_blocks(nodes: List[Dict[str, Any]]) -> List[str]:
             body.append(f"<h{lvl}>{render_inline(n['content'])}</h{lvl}>")
 
         elif t == "paragraph":
-            body.append(f"<p>{render_inline(n['content'])}</p>")
+            extra_class = " class=\"tight-after\"" if n.get("tight_after") else ""
+            body.append(f"<p{extra_class}>{render_inline(n['content'])}</p>")
 
         elif t == "blockquote":
             if "children" in n:
@@ -94,7 +95,9 @@ def render_blocks(nodes: List[Dict[str, Any]]) -> List[str]:
             body.append(f"<table><thead><tr>{head}</tr></thead><tbody>{''.join(rows)}</tbody></table>")
 
         elif t == "code_block":
-            body.append(f"<pre><code>{esc(n['content'])}</code></pre>")
+            lang = n.get("language")
+            lang_attr = f' lang="{esc(lang)}"' if lang else ""
+            body.append(f"<pre class=\"md-fences\"{lang_attr}><code>{esc(n['content'])}</code></pre>")
 
         elif t == "math_block":
             # Use MathJax default display delimiters and keep TeX unescaped.
@@ -186,6 +189,11 @@ def export_pdf(html_content: str, out_path: str) -> None:
         browser = p.chromium.launch()
         page = browser.new_page()
         page.set_content(html_content)
+        page.wait_for_load_state("networkidle")
+        try:
+            page.evaluate("() => (window.MathJax ? MathJax.typesetPromise() : null)")
+        except Exception:
+            pass
         page.pdf(
             path=out_path,
             format="A4",

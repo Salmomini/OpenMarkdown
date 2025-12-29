@@ -329,6 +329,7 @@
     },
     {
       "type": "code_block",
+      "language": "text",
       "content": "Plain code block\nLine two"
     },
     {

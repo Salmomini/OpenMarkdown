@@ -17,7 +17,7 @@ INLINE_PATTERNS = [
     ("image", re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")),
     ("math_inline", re.compile(r"\$(.+?)\$")),
     ("link", re.compile(r"\[([^\]]+)\]\(([^)]+)\)")),
-    ("code", re.compile(r"`(.+?)`")),
+    ("code", re.compile(r"(?<!`)`(.+?)`(?!`)")),
     ("bold", re.compile(r"\*\*(.+?)\*\*")),
     ("italic", re.compile(r"\*(.+?)\*")),
     ("highlight", re.compile(r"==(.+?)==")),
@@ -223,6 +223,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
             else:
                 children.append({
                     "type": "code_block",
+                    "language": info if info else None,
                     "content": "\n".join(code)
                 })
             continue
@@ -231,8 +232,11 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
         para = [line]
         idx += 1
         while idx < len(lines) and lines[idx].strip():
+            if lines[idx].strip().startswith("```"):
+                break
             para.append(lines[idx])
             idx += 1
+        tight_after = idx < len(lines) and lines[idx].strip().startswith("```")
 
         nodes = []
         for i, p in enumerate(para):
@@ -242,7 +246,8 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
 
         children.append({
             "type": "paragraph",
-            "content": nodes
+            "content": nodes,
+            "tight_after": tight_after,
         })
 
     return {"children": children, "title": title}
