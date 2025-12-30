@@ -61,9 +61,9 @@ a single, versioned specification and an authoritative reference parser.
 - `render.py` – Makes a PDF/HTML from the ast.json ->  Final product!
 
 ---
-## License & Philosophy
-OpenMarkdown is source-available.
-You may use and modify it privately, but public forks and redistributed
-modifications are not permitted.
-This ensures a single authoritative syntax and parser, preserving long-term
-stability and determinism across all OpenMarkdown documents.
+## License
+
+The OpenMarkdown reference implementation is licensed under the MIT License.
+
+The name “OpenMarkdown” and compatibility claims are governed by the
+[Trademark & Naming Policy](TRADEMARK.md).
