@@ -10,6 +10,12 @@ class OpenMarkdownError(Exception):
     pass
 
 
+def syntax_error(message: str, line_no: Optional[int] = None) -> OpenMarkdownError:
+    if line_no is None:
+        return OpenMarkdownError(f"Syntax error: {message}")
+    return OpenMarkdownError(f"Syntax error on line {line_no}: {message}")
+
+
 # ---------------------------
 # Inline parsing
 # ---------------------------
@@ -63,7 +69,94 @@ def find_code_span(text: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def parse_inline(text: str) -> List[Dict[str, Any]]:
+def is_escaped(text: str, pos: int) -> bool:
+    count = 0
+    i = pos - 1
+    while i >= 0 and text[i] == "\\":
+        count += 1
+        i -= 1
+    return count % 2 == 1
+
+
+def find_next_unescaped(text: str, token: str, start: int) -> int:
+    idx = text.find(token, start)
+    while idx != -1 and is_escaped(text, idx):
+        idx = text.find(token, idx + 1)
+    return idx
+
+
+def validate_inline_syntax(text: str, line_no: Optional[int]) -> None:
+    if line_no is None:
+        return
+    i = 0
+    n = len(text)
+    while i < n:
+        if text[i] == "\\":
+            i += 2
+            continue
+        if text[i] == "`" and not is_escaped(text, i):
+            run_len = 1
+            while i + run_len < n and text[i + run_len] == "`":
+                run_len += 1
+            token = "`" * run_len
+            close_idx = find_next_unescaped(text, token, i + run_len)
+            if close_idx == -1:
+                raise syntax_error("Unclosed code span", line_no)
+            if text[i + run_len:close_idx].strip() == "":
+                raise syntax_error("Empty code span", line_no)
+            i = close_idx + run_len
+            continue
+        if text.startswith("**", i) and not is_escaped(text, i):
+            close_idx = find_next_unescaped(text, "**", i + 2)
+            if close_idx == -1:
+                raise syntax_error("Unclosed bold", line_no)
+            if text[i + 2:close_idx].strip() == "":
+                raise syntax_error("Empty bold", line_no)
+            i = close_idx + 2
+            continue
+        if text.startswith("==", i) and not is_escaped(text, i):
+            close_idx = find_next_unescaped(text, "==", i + 2)
+            if close_idx == -1:
+                raise syntax_error("Unclosed highlight", line_no)
+            if text[i + 2:close_idx].strip() == "":
+                raise syntax_error("Empty highlight", line_no)
+            i = close_idx + 2
+            continue
+        if text[i] == "~" and not is_escaped(text, i):
+            close_idx = find_next_unescaped(text, "~", i + 1)
+            if close_idx == -1:
+                raise syntax_error("Unclosed strikethrough", line_no)
+            if text[i + 1:close_idx].strip() == "":
+                raise syntax_error("Empty strikethrough", line_no)
+            i = close_idx + 1
+            continue
+        if text[i] == "*" and not is_escaped(text, i):
+            if i + 1 < n and text[i + 1] == "*":
+                i += 1
+                continue
+            close_idx = find_next_unescaped(text, "*", i + 1)
+            if close_idx == -1:
+                raise syntax_error("Unclosed italic", line_no)
+            if text[i + 1:close_idx].strip() == "":
+                raise syntax_error("Empty italic", line_no)
+            i = close_idx + 1
+            continue
+        if text[i] == "$" and not is_escaped(text, i):
+            if i + 1 < n and text[i + 1] == "$":
+                i += 2
+                continue
+            close_idx = find_next_unescaped(text, "$", i + 1)
+            if close_idx == -1:
+                raise syntax_error("Unclosed inline math", line_no)
+            if text[i + 1:close_idx].strip() == "":
+                raise syntax_error("Empty inline math", line_no)
+            i = close_idx + 1
+            continue
+        i += 1
+
+
+def parse_inline(text: str, line_no: Optional[int] = None) -> List[Dict[str, Any]]:
+    validate_inline_syntax(text, line_no)
     nodes: List[Dict[str, Any]] = []
 
     while text:
@@ -158,27 +251,94 @@ def split_table_row(line: str) -> List[str]:
 
 
 # ---------------------------
+# List helpers
+# ---------------------------
+def parse_list_line(line: str, line_no: Optional[int] = None) -> Optional[Dict[str, Any]]:
+    if not line:
+        return None
+    leading = re.match(r"[ \t]*", line).group(0)
+    indent = len(leading)
+    stripped = line[indent:]
+    if not stripped.startswith("-"):
+        return None
+    if not stripped.startswith("- "):
+        raise syntax_error("List items must use '- '", line_no)
+    if "\t" in leading:
+        raise syntax_error("List indentation must use spaces only (two spaces per level)", line_no)
+    if indent % 2 != 0:
+        raise syntax_error("List indentation must use two spaces per level", line_no)
+    raw = stripped[2:].strip()
+    checkbox = None
+    if raw.startswith("[x] "):
+        checkbox, raw = True, raw[4:]
+    elif raw.startswith("[ ] "):
+        checkbox, raw = False, raw[4:]
+    return {
+        "indent": indent,
+        "checkbox": checkbox,
+        "content": raw,
+        "line_no": line_no,
+    }
+
+
+def parse_list(
+    lines: List[str],
+    idx: int,
+    base_indent: int,
+    start_line: int,
+) -> (List[Dict[str, Any]], int):
+    items = []
+    while idx < len(lines):
+        line = lines[idx]
+        if not line.strip():
+            break
+        info = parse_list_line(line, start_line + idx)
+        if not info:
+            break
+        indent = info["indent"]
+        if indent < base_indent:
+            break
+        if indent > base_indent:
+            if not items:
+                break
+            nested_items, idx = parse_list(lines, idx, indent, start_line)
+            if nested_items:
+                items[-1].setdefault("children", []).append({
+                    "type": "list",
+                    "items": nested_items
+                })
+            continue
+        items.append({
+            "checkbox": info["checkbox"],
+            "content": parse_inline(info["content"], info["line_no"])
+        })
+        idx += 1
+    return items, idx
+
+
+# ---------------------------
 # Parser
 # ---------------------------
-def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
+def parse_blocks(
+    lines: List[str],
+    allow_title: bool = False,
+    start_line: int = 1,
+) -> Dict[str, Any]:
     children: List[Dict[str, Any]] = []
     title: Optional[str] = None
     idx = 0
 
     while idx < len(lines):
         line = lines[idx]
+        line_no = start_line + idx
 
         if not line.strip():
             idx += 1
             continue
 
         # Title
-        if allow_title and title is None:
-            stripped = line.lstrip()
-            if stripped.startswith("#*"):
-                title = stripped[2:].strip()
-                idx += 1
-                continue
+        if allow_title and line.startswith("#* "):
+            title = line[3:].strip()
             idx += 1
             continue
 
@@ -190,7 +350,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
                 math.append(lines[idx])
                 idx += 1
             if idx >= len(lines):
-                raise OpenMarkdownError("Unterminated $$ block")
+                raise syntax_error("Unterminated $$ block", line_no)
             idx += 1
             children.append({
                 "type": "math_block",
@@ -213,7 +373,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
             children.append({
                 "type": "heading",
                 "level": len(m.group(1)),
-                "content": parse_inline(m.group(2))
+                "content": parse_inline(m.group(2), line_no)
             })
             idx += 1
             continue
@@ -231,6 +391,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
                 raw = lines[idx].lstrip()[1:]
                 quote_lines.append(raw[1:] if raw.startswith(" ") else raw)
                 idx += 1
+            quote_start = line_no
             header = quote_lines[0].strip() if quote_lines else ""
             callout_match = re.match(r"\[([^\]]+)\]\s*\{([^}]+)\}\s*$", header)
             if callout_match:
@@ -241,21 +402,30 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
                     re.IGNORECASE,
                 )
                 if color_match:
-                    callout_title = callout_match.group(1).strip()
+                    title = callout_match.group(1).strip()
                     color = color_match.group(1).strip()
                     body_lines = quote_lines[1:]
                     if body_lines and not body_lines[0].strip():
                         body_lines = body_lines[1:]
-                    callout_parsed = parse_blocks(body_lines, allow_title=False)
+                    body_start = quote_start + 1
+                    callout_parsed = parse_blocks(
+                        body_lines,
+                        allow_title=False,
+                        start_line=body_start,
+                    )
                     children.append({
                         "type": "callout",
-                        "title": parse_inline(callout_title),
+                        "title": parse_inline(title, quote_start),
                         "color": color,
                         "children": callout_parsed["children"],
                     })
                     continue
 
-            quote_parsed = parse_blocks(quote_lines, allow_title=False)
+            quote_parsed = parse_blocks(
+                quote_lines,
+                allow_title=False,
+                start_line=quote_start,
+            )
             children.append({
                 "type": "blockquote",
                 "children": quote_parsed["children"]
@@ -268,30 +438,22 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
             idx += 2
             rows = []
             while idx < len(lines) and "|" in lines[idx]:
-                rows.append([parse_inline(c) for c in split_table_row(lines[idx])])
+                rows.append([
+                    parse_inline(c, start_line + idx)
+                    for c in split_table_row(lines[idx])
+                ])
                 idx += 1
             children.append({
                 "type": "table",
-                "header": [parse_inline(c) for c in header_cells],
+                "header": [parse_inline(c, line_no) for c in header_cells],
                 "rows": rows
             })
             continue
 
         # List
-        if line.lstrip().startswith("- "):
-            items = []
-            while idx < len(lines) and lines[idx].lstrip().startswith("- "):
-                raw = lines[idx].lstrip()[2:].strip()
-                checkbox = None
-                if raw.startswith("[x] "):
-                    checkbox, raw = True, raw[4:]
-                elif raw.startswith("[ ] "):
-                    checkbox, raw = False, raw[4:]
-                items.append({
-                    "checkbox": checkbox,
-                    "content": parse_inline(raw)
-                })
-                idx += 1
+        list_info = parse_list_line(line, line_no)
+        if list_info:
+            items, idx = parse_list(lines, idx, list_info["indent"], start_line)
             children.append({
                 "type": "list",
                 "items": items
@@ -308,6 +470,8 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
             while idx < len(lines) and lines[idx].strip() != "`" * ticks:
                 code.append(lines[idx])
                 idx += 1
+            if idx >= len(lines):
+                raise syntax_error("Unterminated code block", line_no)
             idx += 1
 
             if info == "mermaid":
@@ -336,7 +500,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
 
         nodes = []
         for i, p in enumerate(para):
-            nodes.extend(parse_inline(p))
+            nodes.extend(parse_inline(p, line_no + i))
             if i < len(para) - 1:
                 nodes.append({"type": "linebreak"})
 
@@ -356,33 +520,41 @@ def parse_openmarkdown_v1(text: str) -> Dict[str, Any]:
 
     # --- Header ---
     if not lines or lines[0].strip() != "---":
-        raise OpenMarkdownError("Missing YAML header")
+        raise syntax_error("Missing YAML header", 1)
 
     idx += 1
     header = {}
 
     while idx < len(lines) and lines[idx].strip() != "---":
         if ":" not in lines[idx]:
-            raise OpenMarkdownError(f"Invalid header line: {lines[idx]}")
+            raise syntax_error(f"Invalid header line: {lines[idx]}", idx + 1)
         k, v = lines[idx].split(":", 1)
         header[k.strip()] = v.strip()
         idx += 1
 
-    if header.get("OpenMarkdown-Version") != "1.1":
-        raise OpenMarkdownError("Unsupported OpenMarkdownVersion")
+    if header.get("OpenMarkdown-Version") != "1.2":
+        raise syntax_error("Unsupported OpenMarkdownVersion")
 
     idx += 1
+    if idx >= len(lines):
+        raise syntax_error("Missing document title", idx + 1)
 
-    parsed = parse_blocks(lines[idx:], allow_title=True)
+    title_line = lines[idx]
+    if not title_line.startswith("#* "):
+        raise syntax_error("Document title must be the first line after the header", idx + 1)
+    title = title_line[3:].strip()
+    idx += 1
+
+    parsed = parse_blocks(lines[idx:], allow_title=False, start_line=idx + 1)
     ast = {
         "type": "document",
-        "version": "1.1",
-        "title": parsed["title"],
+        "version": "1.2",
+        "title": title,
         "children": parsed["children"],
     }
 
     if not ast["title"]:
-        raise OpenMarkdownError("Missing document title")
+        raise syntax_error("Missing document title", idx)
 
     return ast
 
@@ -392,11 +564,10 @@ if __name__ == "__main__":
         print("Usage: python3 parse.py file.omd")
         sys.exit(1)
 
-    if not sys.argv[1].lower().endswith(".omd"):
-        print("Error: file must use the .omd extension", file=sys.stderr)
+    try:
+        with open(sys.argv[1], "r", encoding="utf-8") as f:
+            ast = parse_openmarkdown_v1(f.read())
+        print(json.dumps(ast, indent=2))
+    except OpenMarkdownError as exc:
+        print(f"Parse error: {exc}", file=sys.stderr)
         sys.exit(1)
-
-    with open(sys.argv[1], "r", encoding="utf-8") as f:
-        ast = parse_openmarkdown_v1(f.read())
-
-    print(json.dumps(ast, indent=2))

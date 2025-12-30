@@ -4,7 +4,7 @@ import os
 import sys
 from typing import Optional
 
-from parser import parse_openmarkdown_v1
+from parser import OpenMarkdownError, parse_openmarkdown_v1
 from render import render_html, export_pdf
 
 
@@ -15,17 +15,18 @@ def prompt(label: str, default: Optional[str] = None) -> str:
     return input(f"{label}: ").strip()
 
 
+def format_error(message: str) -> str:
+    return f"\033[31m{message}\033[0m"
+
+
 def main() -> int:
-    print("OpenMarkdown v1.1")
+    print("OpenMarkdown v1.2")
     print("Minimal renderer")
     print("-----------------")
 
     md_path = prompt("OpenMarkdown file", "example.omd")
-    if not md_path.lower().endswith(".omd"):
-        print("Error: file must use the .omd extension", file=sys.stderr)
-        return 1
     if not os.path.isfile(md_path):
-        print(f"Error: file not found: {md_path}", file=sys.stderr)
+        print(format_error(f"Error: file not found: {md_path}"), file=sys.stderr)
         return 1
 
     css_path = prompt("CSS file (optional)", "style.css")
@@ -39,13 +40,17 @@ def main() -> int:
 
     mode = prompt("Export format (html/pdf)", "html").lower()
     if mode not in {"html", "pdf"}:
-        print("Error: format must be 'html' or 'pdf'", file=sys.stderr)
+        print(format_error("Error: format must be 'html' or 'pdf'"), file=sys.stderr)
         return 1
 
     out_path = prompt("Output file", f"out.{mode}")
 
-    with open(md_path, "r", encoding="utf-8") as f:
-        ast = parse_openmarkdown_v1(f.read())
+    try:
+        with open(md_path, "r", encoding="utf-8") as f:
+            ast = parse_openmarkdown_v1(f.read())
+    except OpenMarkdownError as exc:
+        print(format_error(f"Parse error: {exc}"), file=sys.stderr)
+        return 1
 
     html_out = render_html(ast, css=css_text)
 

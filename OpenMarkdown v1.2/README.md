@@ -1,21 +1,21 @@
-# OpenMarkdown v1.1
+# OpenMarkdown v1.2
 *by salmomini*
 
-OpenMarkdown v1.1 is a small Markdown-like format with a required header and a
+OpenMarkdown v1.2 is a small Markdown-like format with a required header and a
 focused set of blocks and inline syntax. This README lists every supported
 syntax rule implemented by the parser in `parser.py`.
 
 ## File format requirements
-- File extension must be `.omd`.
+- OpenMarkdown files use the `.omd` extension.
 - Files must start with a YAML-style header delimited by `---` lines.
-- The header must include `OpenMarkdown-Version: 1.1`.
-- After the header, the document must include a title line using `#* `.
+- The header must include `OpenMarkdown-Version: 1.2`.
+- Immediately after the header, the document must include a title line using `#* `.
 - If the header or title is missing, parsing fails.
 
 Example header + title:
 ```
 ---
-OpenMarkdown-Version: 1.1
+OpenMarkdown-Version: 1.2
 ---
 #* Document Title
 ```
@@ -47,6 +47,7 @@ OpenMarkdown-Version: 1.1
 
 ### Lists and task lists
 - Unordered lists only, using `- `.
+- Nested lists use two spaces before `- ` per nesting level (no tabs or single spaces).
 - Task lists use `- [ ] ` or `- [x] `.
 
 ### Tables
@@ -79,6 +80,8 @@ and blockquotes.
   the content width.
 - Links: `[text](url)`
 - Inline code: use one or more backticks (e.g. `` `code` ``).
+  - Inline syntax must open and close on the same line.
+  - Inline syntax cannot be empty or whitespace-only between markers.
   - Use a longer fence to include backticks inside the code span.
   - Newlines inside inline code are normalized to spaces.
   - If the code span starts and ends with a space and is not all spaces, one
@@ -92,7 +95,6 @@ and blockquotes.
 
 ## Known limitations
 - Only unordered lists are supported.
-- Nested lists are not supported.
 - Tables require a header + separator row.
 - Blockquotes and callouts do not support lazy continuation lines.
 
