@@ -20,7 +20,7 @@ def main() -> int:
     print("Minimal renderer")
     print("-----------------")
 
-    md_path = prompt("Markdown file", "example.md")
+    md_path = prompt("OpenMarkdown file", "example.omd")
     if not os.path.isfile(md_path):
         print(f"Error: file not found: {md_path}", file=sys.stderr)
         return 1

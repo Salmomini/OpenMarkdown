@@ -1,20 +1,21 @@
-# OpenMarkdown v1.1
+# OpenMarkdown v1.0
 *by salmomini*
 
-OpenMarkdown v1.1 is a small Markdown-like format with a required header and a
+OpenMarkdown v1.0 is a small Markdown-like format with a required header and a
 focused set of blocks and inline syntax. This README lists the full syntax
 requirements implemented by the parser in `parser.py`.
 
 ## File format requirements
+- File extension must be `.omd`.
 - Files must start with a YAML-style header delimited by `---` lines.
-- The header must include `OpenMarkdown-Version: 1.1`.
+- The header must include `OpenMarkdown-Version: 1.0`.
 - After the header, the document must include a title line using `#* `.
 - If the header or title is missing, parsing fails.
 
 Example header + title:
 ```
 ---
-OpenMarkdown-Version: 1.1
+OpenMarkdown-Version: 1.0
 ---
 #* Document Title
 ```
@@ -89,8 +90,8 @@ python3 main.py
 
 Parse:
 ```bash
-python3 parser.py example.md
-python3 parser.py example.md > ast.json # Add it to the file
+python3 parser.py example.omd
+python3 parser.py example.omd > ast.json # Add it to the file
 ```
 
 Render:

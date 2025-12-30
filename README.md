@@ -42,3 +42,28 @@ a single, versioned specification and an authoritative reference parser.
 
 > **Don’t believe me?**  
 > Try it yourself.
+
+---
+
+## How to use it
+
+### Simple quickstart
+
+1. Pick a version 
+2. Open it's folder
+3. Install the dependencies from the requirements.txt file
+4. Run `main.py`
+
+### Which file does what?
+
+- `main.py` – Simple script that makes makes rendering a file easier
+- `parser.py` – Parses the .omd
+- `render.py` – Makes a PDF/HTML from the ast.json ->  Final product!
+
+---
+## License & Philosophy
+OpenMarkdown is source-available.
+You may use and modify it privately, but public forks and redistributed
+modifications are not permitted.
+This ensures a single authoritative syntax and parser, preserving long-term
+stability and determinism across all OpenMarkdown documents.

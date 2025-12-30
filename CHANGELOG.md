@@ -13,7 +13,7 @@ Here is a changelog of all the versions:
 - Better Image rendering
 - Syntax Canceling
 
-## Version 1.2 30.12.2025
+## Version 1.2 *30.12.2025*
 
 - Added nested lists.
 - Parser now reports clear syntax errors.

@@ -169,7 +169,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
                     re.IGNORECASE,
                 )
                 if color_match:
-                    title = callout_match.group(1).strip()
+                    callout_title = callout_match.group(1).strip()
                     color = color_match.group(1).strip()
                     body_lines = quote_lines[1:]
                     if body_lines and not body_lines[0].strip():
@@ -177,7 +177,7 @@ def parse_blocks(lines: List[str], allow_title: bool = False) -> Dict[str, Any]:
                     callout_parsed = parse_blocks(body_lines, allow_title=False)
                     children.append({
                         "type": "callout",
-                        "title": parse_inline(title),
+                        "title": parse_inline(callout_title),
                         "color": color,
                         "children": callout_parsed["children"],
                     })
@@ -296,7 +296,7 @@ def parse_openmarkdown_v1(text: str) -> Dict[str, Any]:
         header[k.strip()] = v.strip()
         idx += 1
 
-    if header.get("OpenMarkdown-Version") != "1.1":
+    if header.get("OpenMarkdown-Version") != "1.0":
         raise OpenMarkdownError("Unsupported OpenMarkdownVersion")
 
     idx += 1
@@ -304,7 +304,7 @@ def parse_openmarkdown_v1(text: str) -> Dict[str, Any]:
     parsed = parse_blocks(lines[idx:], allow_title=True)
     ast = {
         "type": "document",
-        "version": "1.1",
+        "version": "1.0",
         "title": parsed["title"],
         "children": parsed["children"],
     }
@@ -317,7 +317,7 @@ def parse_openmarkdown_v1(text: str) -> Dict[str, Any]:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 parse.py file.md")
+        print("Usage: python3 parse.py file.omd")
         sys.exit(1)
 
     with open(sys.argv[1], "r", encoding="utf-8") as f:

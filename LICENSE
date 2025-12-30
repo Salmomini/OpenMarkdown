@@ -1,0 +1,76 @@
+OpenMarkdown Reference License (OMRL)
+
+Copyright © 2025 Leon D.
+
+1. Grant of Permission
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation (the “Software”), to use the
+Software for any purpose, including personal, educational, and commercial use.
+
+You may:
+- Study the Software
+- Modify the Software
+- Re-implement the OpenMarkdown parser for private, internal, or public use
+- Create alternative implementations of the OpenMarkdown specification
+
+
+2. Alternative Implementations
+
+You may create and distribute alternative implementations of the OpenMarkdown
+parser only under the following conditions.
+
+An alternative implementation may be described as “OpenMarkdown-compatible”
+only if it:
+
+- Fully implements all features defined for the declared OpenMarkdown version
+- Does not implement, accept, or rely on any features not defined for that version
+- Produces output equivalent to the OpenMarkdown reference parser for all valid
+  inputs of that version
+
+Any implementation that does not meet all of the above requirements is not
+OpenMarkdown-compatible.
+
+
+3. Restrictions on Representation
+
+You may NOT:
+
+- Represent a non-conforming implementation as OpenMarkdown or
+  OpenMarkdown-compatible
+- Claim or imply that an alternative implementation is official, endorsed, or
+  authoritative
+- Claim authorship, ownership, or control of the OpenMarkdown specification or
+  reference parser
+
+The OpenMarkdown specification and reference parser published by the
+OpenMarkdown project remain the sole authoritative definitions of OpenMarkdown.
+
+
+4. Use of the Name “OpenMarkdown”
+
+The name “OpenMarkdown”, including version identifiers such as “OpenMarkdown v1”,
+may be used only to describe software or documents that fully and exclusively
+conform to the OpenMarkdown specification for the declared version.
+
+A software implementation or document is considered OpenMarkdown-conformant
+only if it:
+
+- Implements all features defined for the declared OpenMarkdown version
+- Does not implement, accept, or rely on any features outside that version
+- Produces equivalent results to the OpenMarkdown reference parser for all valid
+  inputs of that version
+
+Non-conforming software or documents may not be described as OpenMarkdown or
+OpenMarkdown-compatible.
+
+
+5. Warranty Disclaimer
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

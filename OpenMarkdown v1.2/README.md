@@ -75,6 +75,8 @@ OpenMarkdown-Version: 1.2
 Inline parsing runs inside paragraphs, headings, list items, table cells,
 and blockquotes.
 
+- Inline markers must open and close on the same line.
+- Inline markers cannot be empty (e.g. `****` is invalid).
 - Inline math: `$...$`
 - Images: `![alt](url)` or `![alt](url){60%}` to set width as a percent of
   the content width.
@@ -92,6 +94,9 @@ and blockquotes.
 - Strikethrough: `~strike~`
 - Escaping: `\` escapes the next character, preventing inline parsing.
   - Example: `\*not italic*` renders literal asterisks.
+
+## Error reporting
+- The parser reports clear syntax errors when it encounters invalid input.
 
 ## Known limitations
 - Only unordered lists are supported.

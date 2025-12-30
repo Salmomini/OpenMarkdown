@@ -132,7 +132,7 @@ def render_html(ast: Dict[str, Any], css: Optional[str] = None) -> str:
 
     css_block = f"<style>{css}</style>" if css else ""
 
-    doc_title = "OpenMarkdown1.1 \u2013 By Salmomini"
+    doc_title = "OpenMarkdown1.0 \u2013 By Salmomini"
 
     return f"""<!doctype html>
 <html>
@@ -140,7 +140,7 @@ def render_html(ast: Dict[str, Any], css: Optional[str] = None) -> str:
 <meta charset="utf-8">
 <title>{esc(doc_title)}</title>
 <meta name="author" content="Salmomini">
-<meta name="generator" content="OpenMarkdown1.1 \u2013 By Salmomini">
+<meta name="generator" content="OpenMarkdown1.0 \u2013 By Salmomini">
 
 <!-- MathJax -->
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -176,7 +176,7 @@ def export_pdf(html_content: str, out_path: str) -> None:
             )
             return
 
-        meta_title = "OpenMarkdown1.1 \u2013 By Salmomini"
+        meta_title = "OpenMarkdown1.0 \u2013 By Salmomini"
         reader = PdfReader(pdf_path)
         writer = PdfWriter()
         for page in reader.pages:

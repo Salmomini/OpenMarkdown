@@ -1,16 +1,16 @@
 ---
-OpenMarkdown-Version: 1.1
+OpenMarkdown-Version: 1.0
 ---
-#* OpenMarkdown v1.1 Syntax Tour
+#* OpenMarkdown v1.0 Syntax Tour
 
-This document is a readable tour of the OpenMarkdown v1.1 syntax. It uses each feature in-context so you can see how it renders and how it is written. 
+This document is a readable tour of the OpenMarkdown v1.0 syntax. It uses each feature in-context so you can see how it renders and how it is written. 
 Soft line breaks are preserved inside a paragraph. 
 
 Paragraph breaks only happen when there is a completely blank line between blocks, so you can wrap text manually without forcing a new paragraph.
 
 *How this was written:*
 ```text
-This document is a readable tour of the OpenMarkdown v1.1 syntax. It uses each feature in-context so you can see how it renders and how it is written. 
+This document is a readable tour of the OpenMarkdown v1.0 syntax. It uses each feature in-context so you can see how it renders and how it is written. 
 Soft line breaks are preserved inside a paragraph. 
 
 Paragraph breaks only happen when there is a completely blank line between blocks, so you can wrap text manually without forcing a new paragraph.
