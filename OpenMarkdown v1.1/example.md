@@ -34,6 +34,7 @@ Unordered lists use `-` and task lists use `- [ ]` or `- [x]`.
 
 - A basic list item
 - Another item with **emphasis** and a [link](https://openmarkdown.example)
+
 - [ ] Task list item unchecked
 - [x] Task list item checked
 
