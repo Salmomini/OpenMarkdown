@@ -2,75 +2,119 @@ OpenMarkdown Reference License (OMRL)
 
 Copyright © 2025 Leon D.
 
+
 1. Grant of Permission
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation (the “Software”), to use the
 Software for any purpose, including personal, educational, and commercial use.
 
-You may:
-- Study the Software
-- Modify the Software
+This permission includes the rights to:
+
+- Use, study, and modify the Software
+- Distribute the Software
+- Create derivative works based on the Software
 - Re-implement the OpenMarkdown parser for private, internal, or public use
 - Create alternative implementations of the OpenMarkdown specification
 
 
-2. Alternative Implementations
+2. Definition of Features
 
-You may create and distribute alternative implementations of the OpenMarkdown
-parser only under the following conditions.
+For the purposes of this license and the OpenMarkdown specification, a
+“feature” is any behavior, syntax, or output explicitly described in the
+official OpenMarkdown specification for a declared version.
 
-An alternative implementation may be described as “OpenMarkdown-compatible”
-only if it:
-
-- Fully implements all features defined for the declared OpenMarkdown version
-- Does not implement, accept, or rely on any features not defined for that version
-- Produces output equivalent to the OpenMarkdown reference parser for all valid
-  inputs of that version
-
-Any implementation that does not meet all of the above requirements is not
-OpenMarkdown-compatible.
+Behavior that exists solely due to implementation bugs, undefined behavior,
+unspecified edge cases, or deviations from the specification in the reference
+parser does NOT constitute a feature, even if such behavior is observable in
+current or past versions of the reference parser.
 
 
-3. Restrictions on Representation
+3. Alternative Implementations
 
-You may NOT:
+You may create and distribute alternative implementations of the
+OpenMarkdown parser.
+
+An implementation may be described or represented as
+“OpenMarkdown-compatible” only if it:
+
+- Implements the parsing rules and semantic meaning defined in the
+  OpenMarkdown specification for the declared version
+- Fully supports all features defined for that version
+- Does not implement, accept, or rely on features outside that version
+- Produces results consistent with the OpenMarkdown specification,
+  excluding behavior resulting from bugs or undefined behavior
+
+Implementations that do not meet all of the above requirements must not be
+represented as OpenMarkdown or OpenMarkdown-compatible.
+
+
+4. Rendering, Output, and Styling
+
+Alternative implementations may freely modify or replace:
+
+- Rendering logic
+- Output formats
+- Themes or visual presentation
+- Styling mechanisms, including custom CSS
+
+Provided that:
+
+- All features defined by the declared OpenMarkdown version are fully
+  supported
+- Rendering differences do not alter the parsed structure, semantics, or
+  meaning of OpenMarkdown documents
+- No defined feature is disabled, weakened, or made inaccessible due to
+  rendering or styling choices
+
+
+5. Restrictions on Representation
+
+You may not:
 
 - Represent a non-conforming implementation as OpenMarkdown or
   OpenMarkdown-compatible
-- Claim or imply that an alternative implementation is official, endorsed, or
-  authoritative
-- Claim authorship, ownership, or control of the OpenMarkdown specification or
-  reference parser
+- Claim or imply that an alternative implementation is official,
+  endorsed, or authoritative
+- Claim authorship, ownership, or control of the OpenMarkdown
+  specification or reference parser
 
 The OpenMarkdown specification and reference parser published by the
-OpenMarkdown project remain the sole authoritative definitions of OpenMarkdown.
+OpenMarkdown project remain the sole authoritative definitions of
+OpenMarkdown.
 
 
-4. Use of the Name “OpenMarkdown”
+6. Use of the Name “OpenMarkdown”
 
-The name “OpenMarkdown”, including version identifiers such as “OpenMarkdown v1”,
-may be used only to describe software or documents that fully and exclusively
+The name “OpenMarkdown”, including version identifiers such as
+“OpenMarkdown v1”, may be used only to describe software or documents that
 conform to the OpenMarkdown specification for the declared version.
 
-A software implementation or document is considered OpenMarkdown-conformant
-only if it:
+Non-conforming software or documents must not be described as OpenMarkdown
+or OpenMarkdown-compatible, but may describe themselves using other
+terminology.
 
-- Implements all features defined for the declared OpenMarkdown version
-- Does not implement, accept, or rely on any features outside that version
-- Produces equivalent results to the OpenMarkdown reference parser for all valid
-  inputs of that version
-
-Non-conforming software or documents may not be described as OpenMarkdown or
-OpenMarkdown-compatible.
+This section governs representation and naming only and does not restrict
+the use, modification, or distribution of the Software itself.
 
 
-5. Warranty Disclaimer
+7. Bug Compatibility
+
+The OpenMarkdown project does not guarantee that behavior resulting from
+bugs, undefined behavior, or unspecified edge cases will be preserved
+between versions.
+
+Such behavior may change or be removed at any time and does not create
+compatibility requirements.
+
+
+8. Warranty Disclaimer
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
 IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
-DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR
+OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
