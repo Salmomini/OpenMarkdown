@@ -41,12 +41,12 @@ The goal of OpenMarkdown is to make Markdown more stable and standardized within
 a single, versioned specification and an authoritative reference parser.
 
 
----
+
 
 > **Don’t believe me?**  
 > Try it yourself.
 
----
+
 
 ## How to use it
 

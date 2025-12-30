@@ -8,7 +8,6 @@ reference implementation, and default visual presentation maintained by Leon D.
 This document exists to prevent confusion in the ecosystem while encouraging
 open use, experimentation, and extension.
 
----
 
 ## 2. Use of the Name “OpenMarkdown”
 
@@ -26,7 +25,6 @@ Examples:
 - ❌ “OpenMarkdown++”
 - ❌ “Better OpenMarkdown”
 
----
 
 ## 3. Forks and Derivative Works
 
@@ -41,7 +39,6 @@ Acceptable phrasing:
 - “Based on OpenMarkdown”
 - “Derived from OpenMarkdown”
 
----
 
 ## 4. Specification Authority
 
@@ -51,7 +48,6 @@ repository and its tagged releases.
 No fork or derivative work may claim to define or control the
 OpenMarkdown specification.
 
----
 
 ## 5. OpenMarkdown Visual Identity and Theme
 
@@ -81,7 +77,6 @@ Unacceptable phrasing:
 - “Official OpenMarkdown Style”
 - “OpenMarkdown look” (when the default theme is not used)
 
----
 
 ## 6. Relationship to the MIT License
 
