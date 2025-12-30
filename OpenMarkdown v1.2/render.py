@@ -251,8 +251,8 @@ def export_pdf(html_content: str, out_path: str) -> None:
 def usage() -> None:
     print(
         "Usage:\n"
-        "  python3 render.py ast.json --html out.html [--css style.css]\n"
-        "  python3 render.py ast.json --pdf out.pdf   [--css style.css]"
+        "  python3 render.py ast.json --html out.html [--css style.example.css]\n"
+        "  python3 render.py ast.json --pdf out.pdf   [--css style.example.css]"
     )
 
 

@@ -118,6 +118,6 @@ python3 parser.py example.omd > ast.json # Add it to the file
 
 Render:
 ```bash
-python3 render.py ast.json --html out.html [--css style.css]
-python3 render.py ast.json --pdf out.pdf   [--css style.css]
+python3 render.py ast.json --html out.html [--css style.example.css]
+python3 render.py ast.json --pdf out.pdf   [--css style.example.css]
 ```

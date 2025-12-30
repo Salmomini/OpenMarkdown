@@ -2,8 +2,8 @@
 
 ## 1. Purpose
 
-The name **OpenMarkdown** identifies the official OpenMarkdown specification
-and reference implementation maintained by Leon D.
+The name **OpenMarkdown** identifies the official OpenMarkdown specification,
+reference implementation, and default visual presentation maintained by Leon D.
 
 This document exists to prevent confusion in the ecosystem while encouraging
 open use, experimentation, and extension.
@@ -53,14 +53,48 @@ OpenMarkdown specification.
 
 ---
 
-## 5. Relationship to the MIT License
+## 5. OpenMarkdown Visual Identity and Theme
 
-The OpenMarkdown reference implementation is licensed under the MIT License.
+OpenMarkdown includes a default visual theme that defines the official
+OpenMarkdown look and presentation.
+
+Use of the names:
+- “OpenMarkdown Theme”
+- “Official OpenMarkdown Theme”
+- “OpenMarkdown default style”
+
+is permitted ONLY if:
+
+- The OpenMarkdown specification is implemented correctly for the declared version, AND
+- The unmodified OpenMarkdown default theme is used.
+
+Forks, derivatives, or implementations that modify, replace, or extend
+the default theme MUST NOT represent themselves as using the
+OpenMarkdown theme or official OpenMarkdown styling.
+
+Acceptable phrasing:
+- “OpenMarkdown-compatible (custom theme)”
+- “Based on OpenMarkdown, with custom styling”
+
+Unacceptable phrasing:
+- “OpenMarkdown Theme (modified)”
+- “Official OpenMarkdown Style”
+- “OpenMarkdown look” (when the default theme is not used)
+
+---
+
+## 6. Relationship to the MIT License
+
+The OpenMarkdown reference implementation and default theme are licensed
+under the MIT License.
 
 This policy does NOT restrict:
-- Use of the source code
+- Use or modification of the source code
+- Modification or reuse of the theme
 - Reimplementation of the specification
 - Commercial use
 
-It applies ONLY to the use of the name “OpenMarkdown” and claims of
-compatibility or official status.
+It applies ONLY to:
+- Use of the name “OpenMarkdown”
+- Claims of compatibility or official status
+- Claims regarding the OpenMarkdown theme or visual identity

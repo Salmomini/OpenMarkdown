@@ -29,7 +29,7 @@ def main() -> int:
         print(format_error(f"Error: file not found: {md_path}"), file=sys.stderr)
         return 1
 
-    css_path = prompt("CSS file (optional)", "style.css")
+    css_path = prompt("CSS file (optional)", "style.example.css")
     css_text = None
     if css_path:
         if not os.path.isfile(css_path):
