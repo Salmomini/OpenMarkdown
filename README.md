@@ -1,5 +1,7 @@
-# OpenMarkdown
-
+<p align="center">
+  <img src=".readme_assets/logo-light.png#gh-light-mode-only" alt="OpenMarkdown logo" width="180">
+  <img src=".readme_assets/logo-dark.png#gh-dark-mode-only" alt="OpenMarkdown logo" width="180">
+</p>
 **OpenMarkdown:** the Markdown we were promised.
 
 ---
@@ -67,3 +69,7 @@ The OpenMarkdown reference implementation is licensed under the MIT License.
 
 The name “OpenMarkdown” and compatibility claims are governed by the
 [Trademark & Naming Policy](TRADEMARK.md).
+
+<p align="center">
+  <img src="./.readme_assets/platformer.svg" alt="Platformer" width="96" />
+</p>
